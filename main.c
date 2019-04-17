@@ -60,68 +60,8 @@ int8_t user_i2c_write(uint8_t id, uint8_t reg_addr, uint8_t *data, uint16_t len)
 }
 #else
 
-void SPI_BME280_CS_High(void)
-{
-	digitalWrite(27,1);
-}
+	// Partie SPI supprimee
 
-void SPI_BME280_CS_Low(void)
-{
-	digitalWrite(27,0);
-}
-
-void user_delay_ms(uint32_t period)
-{
-  usleep(period*1000);
-}
-
-int8_t user_spi_read(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
-{
-	int8_t rslt = 0;
-	
-	SPI_BME280_CS_High();
-	SPI_BME280_CS_Low();
-	
-	wiringPiSPIDataRW(channel,&reg_addr,1);
-
-	#if(USESPISINGLEREADWRITE)
-    for(int i=0; i < len ; i++)
-	{
-	  wiringPiSPIDataRW(channel,reg_data,1);
-	  reg_data++;
-	}
-	#else
-	wiringPiSPIDataRW(channel,reg_data,len);
-	#endif
-	
-	SPI_BME280_CS_High();
-	
-	return rslt;
-}
-
-int8_t user_spi_write(uint8_t dev_id, uint8_t reg_addr, uint8_t *reg_data, uint16_t len)
-{
-	int8_t rslt = 0;
-
-	SPI_BME280_CS_High();
-	SPI_BME280_CS_Low();
-
-	wiringPiSPIDataRW(channel,&reg_addr,1);
-	
-	#if(USESPISINGLEREADWRITE)
-	for(int i = 0; i < len ; i++)
-	{
-		wiringPiSPIDataRW(channel,reg_data,1);
-		reg_data++;
-	}
-	#else
-	wiringPiSPIDataRW(channel,reg_data,len);
-	#endif
-	
-	SPI_BME280_CS_High();
-	
-	return rslt;
-}
 #endif
 
 void print_sensor_data(struct bme280_data *comp_data)
@@ -221,31 +161,7 @@ int main(int argc, char* argv[])
   stream_sensor_data_normal_mode(&dev);
 }
 #else
-int main(int argc, char* argv[])
-{
-  if(wiringPiSetup() < 0)
-  {
-    return 1;
-  }
-  
-  pinMode (27,OUTPUT) ;
-  
-  SPI_BME280_CS_Low();//once pull down means use SPI Interface
-  
-  wiringPiSPISetup(channel,2000000);
 
-  struct bme280_dev dev;
-  int8_t rslt = BME280_OK;
+	// Parie SPC supprimee
 
-  dev.dev_id = 0;
-  dev.intf = BME280_SPI_INTF;
-  dev.read = user_spi_read;
-  dev.write = user_spi_write;
-  dev.delay_ms = user_delay_ms;
-
-  rslt = bme280_init(&dev);
-  printf("\r\n BME280 Init Result is:%d \r\n",rslt);
-  //stream_sensor_data_forced_mode(&dev);
-  stream_sensor_data_normal_mode(&dev);
-}
 #endif
