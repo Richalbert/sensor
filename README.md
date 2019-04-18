@@ -12,6 +12,9 @@ q		pour quiter
 guide git
 http://rogerdudler.github.io/git-guide/index.fr.html
 
+devenir un expert de Git
+https://fr.atlassian.com/git/tutorials
+
 
 compilation pour test
 gcc -Wall capteurs.c bme280.o -lwiringPi -std=gnu99
