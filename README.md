@@ -20,3 +20,7 @@ compilation pour test
 gcc -Wall capteurs.c bme280.o -lwiringPi -std=gnu99
 
 ./a.out
+
+
+Pour detecter si le capteur est detecte par la pi
+$ sudo i2cdetect -y 1
